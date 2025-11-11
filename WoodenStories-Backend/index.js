@@ -6,7 +6,7 @@ import path from "path";
 import fs from "fs";
 
 import products from "./routes/products.js";
-//import categories from "./routes/customer.js";
+import customer from "./routes/customer.js";
 import orders from "./routes/order.js";
 //import dashboard from "./routes/dashboard.js";
 
@@ -33,7 +33,7 @@ app.get('/api/message', (req, res) => {
 
 // Routes
 app.use("/api/products", products);
-//app.use("/api/categories", categories);
+app.use("/api/customers", customer);
 app.use("/api/orders", orders);
 //app.use("/api/dashboard", dashboard);
 
