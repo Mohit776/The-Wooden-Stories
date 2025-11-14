@@ -90,7 +90,7 @@ const Navbar = ({ onToggleSidebar }) => {
                     <User size={18} />
                   </Link>
 
-                  <Link
+                  {/* <Link
                     to="/wishlist"
                     className="text-[#f3e9c6] hover:text-[#d6c088] transition-colors duration-300 transform hover:scale-110 relative"
                   >
@@ -98,7 +98,7 @@ const Navbar = ({ onToggleSidebar }) => {
                     <span className="absolute -top-2 -right-2 bg-[#654f44] text-[#f3e9c6] text-xs rounded-full h-4 w-4 flex items-center justify-center">
                       3
                     </span>
-                  </Link>
+                  </Link> */}
 
                   <Link
                     to="/cart"

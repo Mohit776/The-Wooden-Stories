@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ShoppingBag, Heart, Star, Filter, Grid, List, Search, X, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShoppingBag, Heart, Star, Filter, Grid, List, Search, X, ChevronRight, Loader } from 'lucide-react';
 
 const Products = () => {
     const [viewMode, setViewMode] = useState('grid');
@@ -8,137 +8,98 @@ const Products = () => {
     const [priceRange, setPriceRange] = useState([0, 50000]);
     const [searchTerm, setSearchTerm] = useState('');
     const [showFilters, setShowFilters] = useState(false);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const fetchProducts = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch('/api/products');
+
+            if (!response.ok) throw new Error('Failed to fetch products');
+            const data = await response.json();
+            
+          const transformedProducts = data.map(product => {
+    // Safe image parsing supporting array or string
+    let imageUrl = "/Product/product-1.png";
+
+    try {
+        const imgs = product.images;
+        if (Array.isArray(imgs)) {
+            const first = imgs[0];
+            if (typeof first === 'string') {
+                imageUrl = first.startsWith('http')
+                    ? first
+                    : first.startsWith('/')
+                        ? `http://localhost:5000${first}`
+                        : first;
+            }
+        } else if (typeof imgs === 'string') {
+            const trimmed = imgs.trim();
+            if (trimmed.startsWith('[')) {
+                const arr = JSON.parse(trimmed);
+                const first = arr[0];
+                if (typeof first === 'string') {
+                    imageUrl = first.startsWith('http')
+                        ? first
+                        : first.startsWith('/')
+                            ? `http://localhost:5000${first}`
+                            : first;
+                }
+            } else if (trimmed.startsWith('http')) {
+                imageUrl = trimmed;
+            } else if (trimmed.startsWith('/')) {
+                imageUrl = `http://localhost:5000${trimmed}`;
+            }
+        }
+    } catch {
+        imageUrl = "/Product/product-1.png";
+    }
+
+    return {
+        id: product.id,
+        name: product.title,
+        category: product.category || 'decor',
+        price: parseFloat(product.price),
+        originalPrice: parseFloat(product.price) * 1.25,
+        rating: 4.5,
+        reviews: Math.floor(Math.random() * 100) + 20,
+        description: product.description || 'Handcrafted wooden piece',
+        features: ['Handcrafted', 'Premium Quality', 'Durable'],
+        images: imageUrl,
+        inStock: product.stock_quantity > 0,
+        featured: Math.random() > 0.5,
+        tags: [
+            product.stock_quantity > 0 ? 'available' : 'out-of-stock',
+            Math.random() > 0.7 ? 'bestseller' : null,
+            Math.random() > 0.8 ? 'new' : null
+        ].filter(Boolean)
+    };
+});
+
+            
+            setProducts(transformedProducts);
+            setError(null);
+        } catch (err) {
+            console.error('Error fetching products:', err);
+            setError('Failed to load products. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const categories = [
-        { id: 'furniture', name: 'Furniture', count: 24 },
-        { id: 'wall-art', name: 'Wall Art', count: 18 },
-        { id: 'decor', name: 'Home Decor', count: 15 },
-        { id: 'storage', name: 'Storage', count: 12 },
-        { id: 'lighting', name: 'Lighting', count: 8 },
-        { id: 'kitchen', name: 'Kitchenware', count: 6 }
-    ];
-
-    const products = [
-        {
-            id: 1,
-            name: 'Walnut Wall Panel',
-            category: 'wall-art',
-            price: 8999,
-            originalPrice: 11999,
-            rating: 4.8,
-            reviews: 124,
-            description: 'Handcrafted walnut wood panel with intricate carving, perfect for accent walls.',
-            features: ['Solid Walnut', 'Hand Carved', 'Eco-Friendly Finish'],
-            images: '/Product/product-1.png',
-            inStock: true,
-            featured: true,
-            tags: ['bestseller', 'new']
-        },
-        {
-            id: 2,
-            name: 'Teak Coffee Table',
-            category: 'furniture',
-            price: 24999,
-            originalPrice: 29999,
-            rating: 4.9,
-            reviews: 89,
-            description: 'Elegant teak wood coffee table with smooth finish and sturdy construction.',
-            features: ['Solid Teak', 'Water Resistant', 'Easy Assembly'],
-            images: '/Product/Product-2.png',
-            inStock: true,
-            featured: true,
-            tags: ['featured', 'premium']
-        },
-        {
-            id: 3,
-            name: 'Carved Wall Accent',
-            category: 'decor',
-            price: 6499,
-            originalPrice: 8499,
-            rating: 4.7,
-            reviews: 67,
-            description: 'Beautiful carved wooden accent piece for wall decoration.',
-            features: ['Hand Painted', 'Lightweight', 'Ready to Hang'],
-            images: '/Product/Product-3.png',
-            inStock: true,
-            featured: false,
-            tags: ['sale']
-        },
-        {
-            id: 4,
-            name: 'Oak Display Shelf',
-            category: 'storage',
-            price: 12999,
-            originalPrice: 15999,
-            rating: 4.6,
-            reviews: 45,
-            description: 'Modern oak wood display shelf with multiple compartments.',
-            features: ['Solid Oak', 'Adjustable Shelves', 'Wall Mounted'],
-            images: '/Product/product-4.png',
-            inStock: false,
-            featured: false,
-            tags: ['out-of-stock']
-        },
-        {
-            id: 5,
-            name: 'Rosewood Side Table',
-            category: 'furniture',
-            price: 15999,
-            originalPrice: 19999,
-            rating: 4.8,
-            reviews: 78,
-            description: 'Compact rosewood side table with elegant design and smooth finish.',
-            features: ['Solid Rosewood', 'Compact Design', 'Easy to Move'],
-            images: '/Product/product-5.png',
-            inStock: true,
-            featured: true,
-            tags: ['new']
-        },
-        {
-            id: 6,
-            name: 'Hand-carved Mirror',
-            category: 'decor',
-            price: 11499,
-            originalPrice: 14499,
-            rating: 4.5,
-            reviews: 56,
-            description: 'Ornate hand-carved wooden frame mirror for elegant interiors.',
-            features: ['Hand Carved', 'Antique Finish', 'Safety Backing'],
-            images: '/Product/product-6.png',
-            inStock: true,
-            featured: false,
-            tags: ['sale']
-        },
-        {
-            id: 7,
-            name: 'Teakwood Bookshelf',
-            category: 'storage',
-            price: 18999,
-            originalPrice: 22999,
-            rating: 4.9,
-            reviews: 92,
-            description: 'Spacious teakwood bookshelf with multiple shelves and sturdy construction.',
-            features: ['Solid Teak', '6 Shelves', 'Weight Capacity 50kg'],
-            images: '/Product/product-7.png',
-            inStock: true,
-            featured: true,
-            tags: ['bestseller', 'premium']
-        },
-        {
-            id: 8,
-            name: 'Wooden Wall Sculpture',
-            category: 'wall-art',
-            price: 7999,
-            originalPrice: 9999,
-            rating: 4.4,
-            reviews: 34,
-            description: 'Abstract wooden wall sculpture adding artistic touch to your space.',
-            features: ['Abstract Design', 'Mixed Woods', 'Lightweight'],
-            images: '/Product/product-8.png',
-            inStock: true,
-            featured: false,
-            tags: ['new']
-        }
+        { id: 'furniture', name: 'Furniture', count: products.filter(p => p.category === 'furniture').length },
+        { id: 'wall-art', name: 'Wall Art', count: products.filter(p => p.category === 'wall-art').length },
+        { id: 'decor', name: 'Home Decor', count: products.filter(p => p.category === 'decor').length },
+        { id: 'storage', name: 'Storage', count: products.filter(p => p.category === 'storage').length },
+        { id: 'lighting', name: 'Lighting', count: products.filter(p => p.category === 'lighting').length },
+        { id: 'kitchen', name: 'Kitchenware', count: products.filter(p => p.category === 'kitchen').length }
     ];
 
     const filteredProducts = products.filter(product => {
@@ -171,13 +132,43 @@ const Products = () => {
         setSearchTerm('');
     };
 
+    if (loading) {
+        return (
+            <div className="bg-gradient-to-br from-[#f3e9c6] via-[#f5ecd0] to-[#f3e9c6] min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <Loader className="w-16 h-16 text-[#d6c088] animate-spin mx-auto mb-4" />
+                    <p className="text-[#2c1910] text-xl font-serif">Loading products...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="bg-gradient-to-br from-[#f3e9c6] via-[#f5ecd0] to-[#f3e9c6] min-h-screen flex items-center justify-center">
+                <div className="text-center bg-white rounded-2xl p-8 shadow-xl max-w-md">
+                    <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <X size={40} className="text-red-500" />
+                    </div>
+                    <h2 className="text-2xl font-serif text-[#2c1910] mb-2">Error Loading Products</h2>
+                    <p className="text-[#654f44] mb-6">{error}</p>
+                    <button
+                        onClick={fetchProducts}
+                        className="bg-gradient-to-r from-[#2c1910] to-[#3d2418] text-[#f3e9c6] px-8 py-3 rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 font-medium"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-gradient-to-br from-[#f3e9c6] via-[#f5ecd0] to-[#f3e9c6] min-h-screen">
-            {/* Hero Header */}
             <div className="relative bg-gradient-to-r from-[#2c1910] via-[#3d2418] to-[#2c1910] overflow-hidden">
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute inset-0" style={{
-                        backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(211, 192, 136, 0.1) 35px, rgba(211, 192, 136, 0.1) 70px)`
+                        backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(211, 192, 136, 0.1) 35px, rgba(211, 192, 136, 0.1) 70px)'
                     }}></div>
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 relative">
@@ -200,11 +191,9 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* Controls Bar */}
             <div className="sticky top-16 z-50 bg-white/95 backdrop-blur-sm shadow-lg border-b-2 border-[#d6c088]/20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
                     <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4">
-                        {/* Search */}
                         <div className="relative w-full lg:w-80">
                             <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-[#654f44]" size={18} />
                             <input
@@ -216,7 +205,6 @@ const Products = () => {
                             />
                         </div>
 
-                        {/* Filters & Sort */}
                         <div className="flex items-center gap-2 sm:gap-3 w-full lg:w-auto justify-between">
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
@@ -246,7 +234,6 @@ const Products = () => {
                                 </select>
                             </div>
 
-                            {/* View Toggle */}
                             <div className="flex items-center border-2 border-[#d6c088]/30 rounded-lg sm:rounded-xl p-1 bg-white">
                                 <button
                                     onClick={() => setViewMode('grid')}
@@ -264,7 +251,6 @@ const Products = () => {
                         </div>
                     </div>
 
-                    {/* Mobile Filters Panel */}
                     {showFilters && (
                         <div className="mt-6 p-6 bg-gradient-to-br from-white to-[#f3e9c6]/30 border-2 border-[#d6c088]/30 rounded-2xl lg:hidden shadow-xl">
                             <div className="flex justify-between items-center mb-6">
@@ -319,10 +305,8 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* Main Content */}
             <div className="max-w-8xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                    {/* Sidebar Filters - Desktop */}
                     <div className="hidden lg:block w-full lg:w-80 flex-shrink-0">
                         <div className="bg-white rounded-2xl shadow-xl p-8 sticky top-48 border-2 border-[#d6c088]/20">
                             <div className="flex justify-between items-center mb-4">
@@ -376,16 +360,13 @@ const Products = () => {
                         </div>
                     </div>
 
-                    {/* Products Grid */}
                     <div className="flex-1">
-                        {/* Results Count */}
                         <div className="flex justify-between items-center mb-8 bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-[#d6c088]/20">
                             <p className="text-[#654f44] font-medium">
                                 Showing <span className="text-[#2c1910] font-bold">{sortedProducts.length}</span> of <span className="text-[#2c1910] font-bold">{products.length}</span> products
                             </p>
                         </div>
 
-                        {/* Products */}
                         {viewMode === 'grid' ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                                 {sortedProducts.map(product => (
@@ -400,7 +381,6 @@ const Products = () => {
                             </div>
                         )}
 
-                        {/* No Results */}
                         {sortedProducts.length === 0 && (
                             <div className="text-center py-20 bg-white rounded-2xl shadow-lg border-2 border-[#d6c088]/20">
                                 <div className="mb-6">
@@ -425,7 +405,6 @@ const Products = () => {
     );
 };
 
-// Product Card Component
 const ProductCard = ({ product, view }) => {
     const [isWishlisted, setIsWishlisted] = useState(false);
     const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
@@ -433,16 +412,17 @@ const ProductCard = ({ product, view }) => {
     if (view === 'grid') {
         return (
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 group overflow-hidden border-2 border-transparent hover:border-[#d6c088]/30">
-                {/* Image Section */}
                 <div className="relative h-56 sm:h-64 md:h-72 bg-gradient-to-br from-[#654f44] to-[#4a3530] overflow-hidden">
                     <img
                         src={product.images}
                         alt={product.name}
                         className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                        onError={(e) => {
+                            e.target.src = '/Product/product-1.png';
+                        }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                    {/* Tags */}
                     <div className="absolute top-2 sm:top-4 left-2 sm:left-4 flex flex-wrap gap-1.5 sm:gap-2">
                         {product.tags.map(tag => (
                             <span
@@ -465,7 +445,6 @@ const ProductCard = ({ product, view }) => {
                         )}
                     </div>
 
-                    {/* Wishlist Button */}
                     <button
                         onClick={() => setIsWishlisted(!isWishlisted)}
                         className="absolute top-2 sm:top-4 right-2 sm:right-4 p-2 sm:p-3 bg-white/95 backdrop-blur-sm rounded-full hover:bg-white shadow-lg transition-all duration-300 transform hover:scale-110 hover:rotate-12"
@@ -476,14 +455,12 @@ const ProductCard = ({ product, view }) => {
                         />
                     </button>
 
-                    {/* Add to Cart Button */}
                     <button className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#2c1910] to-[#3d2418] text-[#f3e9c6] px-4 sm:px-8 py-2 sm:py-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 flex items-center space-x-2 font-medium shadow-xl hover:shadow-2xl hover:scale-105 text-xs sm:text-sm">
                         <ShoppingBag size={14} className="sm:w-[18px] sm:h-[18px]" />
                         <span className="hidden sm:inline">Add to Cart</span>
                     </button>
                 </div>
 
-                {/* Content Section */}
                 <div className="p-4 sm:p-6">
                     <div className="flex justify-between items-start mb-2 sm:mb-3">
                         <div className="flex-1 pr-2">
@@ -526,20 +503,20 @@ const ProductCard = ({ product, view }) => {
         );
     }
 
-    // List View
     return (
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 group overflow-hidden border-2 border-transparent hover:border-[#d6c088]/30">
             <div className="flex flex-col md:flex-row">
-                {/* Image */}
                 <div className="w-full md:w-80 h-48 sm:h-56 md:h-64 bg-gradient-to-br from-[#654f44] to-[#4a3530] relative overflow-hidden flex-shrink-0">
                     <img
                         src={product.images}
                         alt={product.name}
                         className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                        onError={(e) => {
+                            e.target.src = '/Product/product-1.png';
+                        }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                    {/* Tags */}
                     <div className="absolute top-4 left-4 flex flex-wrap gap-2">
                         {product.tags.includes('bestseller') && (
                             <span className="px-3 py-1.5 bg-gradient-to-r from-[#d6c088] to-[#c4a86f] text-[#2c1910] text-xs font-bold rounded-full shadow-lg">BESTSELLER</span>
@@ -550,7 +527,6 @@ const ProductCard = ({ product, view }) => {
                     </div>
                 </div>
 
-                {/* Content */}
                 <div className="flex-1 p-4 sm:p-6 md:p-8">
                     <div className="flex flex-col h-full">
                         <div className="flex-1">
@@ -579,7 +555,6 @@ const ProductCard = ({ product, view }) => {
 
                             <p className="text-[#654f44] text-xs sm:text-sm md:text-base mb-4 sm:mb-6 leading-relaxed">{product.description}</p>
 
-                            {/* Features */}
                             <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
                                 {product.features.slice(0, 3).map((feature, index) => (
                                     <span key={index} className="px-2 sm:px-3 md:px-4 py-1 sm:py-2 bg-gradient-to-r from-[#f3e9c6] to-[#f5ecd0] text-[#654f44] text-xs sm:text-sm rounded-full font-medium border border-[#d6c088]/30 hover:border-[#d6c088] transition-colors">

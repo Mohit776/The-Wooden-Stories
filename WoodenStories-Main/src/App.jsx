@@ -10,6 +10,7 @@ import Cart from './Pages/cart';
 import Wishlist from './Pages/wishlist';
 import Profile from './Pages/account';
 import AdminPanel from './Pages/admin';
+import Login from './Pages/Login';
 
 
 
@@ -38,8 +39,9 @@ export default function App() {
         { path: "/cart", element: <Cart /> },
         { path: "/wishlist", element: <Wishlist /> },
         { path: "/account", element: <Profile /> },
-        { path: "/admin", element: <AdminPanel /> },
+    //    { path: "/admin", element: <AdminPanel /> },
         { path: "*", element: <Home /> },
+        {path:"/login", element: <Login /> }
       
       ]
     }

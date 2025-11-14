@@ -7,6 +7,7 @@ import Customer from '../components/Admin/customer';
 import Products from '../components/Admin/product';
 import Navbar from '../components/Navbar';
 
+
 export default function AdminPanel() {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,8 +22,8 @@ export default function AdminPanel() {
             {/* Top Navigation */}
 
             <div className="flex pt-20">
-
-                {/* Sidebar */}
+                {/*  Sidebar */}
+                
                 <aside className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                     } mt-20 lg:mt-0`}>
                     <div className="h-full overflow-y-auto p-4">
@@ -81,6 +82,7 @@ export default function AdminPanel() {
                         </nav>
                     </div>
                 </aside>
+             
 
 
                 {/* Overlay */}

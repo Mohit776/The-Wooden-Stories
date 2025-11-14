@@ -89,7 +89,7 @@ export default function EditProduct() {
 
       if (res.status === 200) {
         alert("Product updated successfully!");
-        navigate("/products");
+        navigate("/admin");
       }
     } catch (err) {
       console.error(err);

@@ -162,16 +162,26 @@ export default function Product() {
       {!loading && products.length > 0 && (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => {
-            const images = Array.isArray(product.images)
-              ? product.images
-              : product.images
-              ? JSON.parse(product.images)
-              : [];
+            let images = [];
+            try {
+              if (Array.isArray(product.images)) {
+                images = product.images;
+              } else if (typeof product.images === 'string') {
+                const s = product.images.trim();
+                if (s.startsWith('[')) {
+                  images = JSON.parse(s);
+                } else if (s.startsWith('http')) {
+                  images = [s];
+                } else if (s.startsWith('/')) {
+                  images = [`http://localhost:5000${s}`];
+                }
+              }
+            } catch (_) {
+              images = [];
+            }
 
             const firstImage = images.length > 0
-              ? (typeof images[0] === 'string' && images[0].startsWith('http')
-                  ? images[0]
-                  : `http://localhost:5000${images[0]}`)
+              ? (typeof images[0] === 'string' && (images[0].startsWith('http') ? images[0] : `http://localhost:5000${images[0]}`))
               : null;
 
             return (

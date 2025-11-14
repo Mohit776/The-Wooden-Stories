@@ -8,6 +8,7 @@ import AddProductForm from './components/Features/AddProducts.jsx'
 import EditProduct from './components/Features/edit.jsx';
 
 
+
 const Layout = () => {
   return (
     <>
@@ -30,7 +31,8 @@ export default function App() {
    //  { path: "*", element: <Home /> },
         { path: "/", element: <Login /> },
         {path:"/add-product", element:<AddProductForm/>},
-        {path:"/edit-product/:id", element:<EditProduct/>}
+        {path:"/edit-product/:id", element:<EditProduct/>},
+      
 
       ]
     }
