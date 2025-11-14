@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Heart, Star, Filter, Grid, List, Search, X, ChevronRight, Loader } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
     const [viewMode, setViewMode] = useState('grid');
@@ -400,6 +401,7 @@ const Products = () => {
                         )}
                     </div>
                 </div>
+
             </div>
         </div>
     );
@@ -407,7 +409,45 @@ const Products = () => {
 
 const ProductCard = ({ product, view }) => {
     const [isWishlisted, setIsWishlisted] = useState(false);
+    const [isAdded, setIsAdded] = useState(false);
     const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+    const navigate = useNavigate();
+
+    const handleAddToCart = () => {
+        try {
+            const stored = localStorage.getItem('cartItems');
+            const existing = stored ? JSON.parse(stored) : [];
+
+            let updatedItems;
+            const index = Array.isArray(existing) ? existing.findIndex(item => item.id === product.id) : -1;
+
+            if (index !== -1) {
+                updatedItems = existing.map(item =>
+                    item.id === product.id
+                        ? { ...item, quantity: (item.quantity || 1) + 1 }
+                        : item
+                );
+            } else {
+                updatedItems = [
+                    ...Array.isArray(existing) ? existing : [],
+                    {
+                        id: product.id,
+                        name: product.name,
+                        category: product.category,
+                        price: product.price,
+                        quantity: 1,
+                        inStock: product.inStock !== false
+                    }
+                ];
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(updatedItems));
+            setIsAdded(true);
+         //   navigate('/cart');
+        } catch (err) {
+            console.error('Failed to add item to cart:', err);
+        }
+    };
 
     if (view === 'grid') {
         return (
@@ -455,7 +495,15 @@ const ProductCard = ({ product, view }) => {
                         />
                     </button>
 
-                    <button className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#2c1910] to-[#3d2418] text-[#f3e9c6] px-4 sm:px-8 py-2 sm:py-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 flex items-center space-x-2 font-medium shadow-xl hover:shadow-2xl hover:scale-105 text-xs sm:text-sm">
+                    <button
+                        disabled={!product.inStock}
+                        onClick={handleAddToCart}
+                        className={`absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 text-[#f3e9c6] px-4 sm:px-8 py-2 sm:py-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 flex items-center space-x-2 font-medium shadow-xl hover:shadow-2xl hover:scale-105 text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                            isAdded
+                                ? 'bg-green-600 hover:bg-green-700'
+                                : 'bg-gradient-to-r from-[#2c1910] to-[#3d2418]'
+                        }`}
+                    >
                         <ShoppingBag size={14} className="sm:w-[18px] sm:h-[18px]" />
                         <span className="hidden sm:inline">Add to Cart</span>
                     </button>
@@ -479,14 +527,14 @@ const ProductCard = ({ product, view }) => {
                     <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-[#d6c088]/20">
                         <div className="flex items-center space-x-1.5 sm:space-x-2">
                             <div className="flex items-center space-x-1 bg-[#f3e9c6] px-1.5 sm:px-2 py-1 rounded-lg">
-                                <Star size={12} className="sm:w-[14px] sm:h-[14px] text-[#d6c088] fill-current" />
+                                <Star size={12} className="sm:w-4 sm:h-4 text-[#d6c088] fill-current" />
                                 <span className="text-[#2c1910] text-xs sm:text-sm font-bold">{product.rating}</span>
                             </div>
                             <span className="text-[#654f44] text-xs sm:text-sm">({product.reviews})</span>
                         </div>
 
                         <div className="text-right">
-                            <div className="flex flex-col items-end">
+                            <div className="flex flex-col">
                                 {product.originalPrice > product.price && (
                                     <span className="text-[#654f44] text-[10px] sm:text-xs line-through">₹{product.originalPrice.toLocaleString()}</span>
                                 )}
@@ -589,7 +637,12 @@ const ProductCard = ({ product, view }) => {
                                 </button>
                                 <button
                                     disabled={!product.inStock}
-                                    className="bg-gradient-to-r from-[#2c1910] to-[#3d2418] text-[#f3e9c6] px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 font-medium hover:scale-105 text-sm sm:text-base"
+                                    onClick={handleAddToCart}
+                                    className={`text-[#f3e9c6] px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 font-medium hover:scale-105 text-sm sm:text-base ${
+                                        isAdded
+                                            ? 'bg-green-600 hover:bg-green-700'
+                                            : 'bg-gradient-to-r from-[#2c1910] to-[#3d2418]'
+                                    }`}
                                 >
                                     <ShoppingBag size={14} className="sm:w-[18px] sm:h-[18px]" />
                                     <span>Add to Cart</span>

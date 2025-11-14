@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, ChevronRight, Star, Shield, Truck, Heart } from 'lucide-react';
+import { Link } from 'react-router';
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -127,13 +128,13 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button className="group rounded-xl bg-[#2c1910] text-[#f3e9c6] px-6 py-3 flex items-center justify-center space-x-2 hover:bg-[#654f44] transition-all duration-300 transform hover:scale-105 shadow-lg">
-                  <span>Explore Collection</span>
+                  <Link  to={"/products"} >Explore Collection</Link>
                   <ChevronRight className="group-hover:translate-x-1 transition-transform duration-300" size={18} />
                 </button>
 
-                <button className="border-2 rounded-xl border-[#2c1910] text-[#2c1910] px-6 py-3 hover:bg-[#2c1910] hover:text-[#f3e9c6] transition-all">
+                <Link to={"/contact"} className="border-2 rounded-xl border-[#2c1910] text-[#2c1910] px-6 py-3 hover:bg-[#2c1910] hover:text-[#f3e9c6] transition-all">
                   Book Consultation
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -241,9 +242,9 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-10">
-            <button className="border-2 rounded-xl border-[#2c1910] text-[#2c1910] hover:bg-[#2c1910] hover:text-[#f3e9c6] px-8 py-3 transition-all">
+            <Link  to={"/products"}  className="border-2 rounded-xl border-[#2c1910] text-[#2c1910] hover:bg-[#2c1910] hover:text-[#f3e9c6] px-8 py-3 transition-all">
               View All Products
-            </button>
+            </Link>
           </div>
 
         </div>
@@ -263,12 +264,12 @@ export default function Home() {
                 Each artifact is a testament to sustainable craftsmanship, blending traditional techniques with contemporary design sensibilities to create timeless pieces for modern homes.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
-                <button className="bg-[#d6c088] rounded-2xl text-[#2c1910] px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#f3e9c6] transition-all duration-300 transform hover:scale-105 font-medium text-sm sm:text-base">
+                <Link to={"/about"} className="bg-[#d6c088] rounded-2xl text-[#2c1910] px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#f3e9c6] transition-all duration-300 transform hover:scale-105 font-medium text-sm sm:text-base">
                   Learn More About Us
-                </button>
-                <button className="border-2 rounded-2xl border-[#d6c088] text-[#d6c088] px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#d6c088] hover:text-[#2c1910] transition-all duration-300 text-sm sm:text-base">
+                </Link>
+                <Link to={"/about"} className="border-2 rounded-2xl border-[#d6c088] text-[#d6c088] px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#d6c088] hover:text-[#2c1910] transition-all duration-300 text-sm sm:text-base">
                   Meet Our Artisans
-                </button>
+                </Link>
               </div>
             </div>
 

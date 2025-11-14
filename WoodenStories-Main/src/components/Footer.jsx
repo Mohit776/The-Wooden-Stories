@@ -66,7 +66,7 @@ export default function Footer() {
 
           <div className="border-t border-[#654f44] pt-6 sm:pt-8 text-center">
             <p className="text-[#d6c088] text-xs sm:text-sm px-4">
-              &copy; 2024 The Wooden Stories. All rights reserved. | Crafted with passion in India
+              &copy; 2025 ❤️ Mohit Aggarwal ❤️. All rights reserved. | Crafted with passion
             </p>
           </div>
         </div>

@@ -1,46 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { ShoppingBag, Trash2, Plus, Minus, ChevronRight, Tag, Truck, Shield, X } from 'lucide-react';
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'Walnut Wall Panel',
-      category: 'Wall Art',
-      price: 8999,
-      quantity: 1,
-      inStock: true
-    },
-    {
-      id: 2,
-      name: 'Teak Coffee Table',
-      category: 'Furniture',
-      price: 24999,
-      quantity: 1,
-      inStock: true
-    },
-    {
-      id: 3,
-      name: 'Carved Wall Accent',
-      category: 'Decor',
-      price: 6499,
-      quantity: 2,
-      inStock: true
-    }
-  ]);
+  const [cartItems, setCartItems] = useState([]);
 
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
 
+  const syncCart = (items) => {
+    setCartItems(items);
+    try {
+      localStorage.setItem('cartItems', JSON.stringify(items));
+    } catch (err) {
+      console.error('Failed to persist cart items:', err);
+    }
+  };
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('cartItems');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setCartItems(parsed);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load cart items:', err);
+    }
+  }, []);
+
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) return;
-    setCartItems(cartItems.map(item => 
+    const updated = cartItems.map(item => 
       item.id === id ? { ...item, quantity: newQuantity } : item
-    ));
+    );
+    syncCart(updated);
   };
 
   const removeItem = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
+    const updated = cartItems.filter(item => item.id !== id);
+    syncCart(updated);
   };
 
   const applyCoupon = () => {
