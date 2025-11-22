@@ -27,7 +27,11 @@ This repository contains three main parts:
 - **MySQL** via `mysql2`
 - **Cloudinary** + `multer` + `multer-storage-cloudinary` for image upload
 - **dotenv** for environment configuration
+<<<<<<< HEAD
 - **cors**, `morgan` and other typical Express middleware
+=======
+- **cors`, `morgan` and other typical Express middleware
+>>>>>>> c297cf653e5cfb79bb8b0ad9725bee431e88bf13
 
 ---
 
@@ -42,6 +46,7 @@ This repository contains three main parts:
   - Database persistence via Prisma + MySQL
 - Admin and main frontends call this API for product data.
 
+<<<<<<< HEAD
 ### Architecture Diagram
 
 ```mermaid
@@ -52,6 +57,8 @@ graph TD
     Backend --> Cloudinary[Cloudinary]
 ```
 
+=======
+>>>>>>> c297cf653e5cfb79bb8b0ad9725bee431e88bf13
 ### 2. Admin Dashboard (WoodenStories-Admin)
 
 - Built with React + Vite.
