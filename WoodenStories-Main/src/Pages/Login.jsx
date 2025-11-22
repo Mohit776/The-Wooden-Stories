@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Phone, User, Mail, ArrowRight, Loader, AlertCircle, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,8 +19,6 @@ export default function Login() {
     email: '',
     phone: ''
   });
-
-  const API_URL = 'http://localhost:5000/api';
 
   const handleLoginChange = (e) => {
     setLoginData({

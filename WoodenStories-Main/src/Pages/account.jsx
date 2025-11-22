@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Phone, MapPin, Save, Loader, AlertCircle, CheckCircle, Mail } from 'lucide-react';
 import axios from 'axios';
+import { API_URL } from '../config';
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
@@ -18,8 +19,6 @@ export default function Profile() {
     pincode: '',
     state: ''
   });
-
-  const API_URL = 'http://localhost:5000/api';
 
   // Get phone from localStorage
   const getUserPhone = () => {

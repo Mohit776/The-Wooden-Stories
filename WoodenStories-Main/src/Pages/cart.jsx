@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { ShoppingBag, Trash2, Plus, Minus, ChevronRight, Tag, Truck, Shield, X } from 'lucide-react';
+import { BACKEND_BASE_URL } from '../config';
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -98,7 +99,7 @@ export default function Cart() {
         return;
       }
 
-      const backendBaseUrl = 'http://localhost:5000';
+      const backendBaseUrl = BACKEND_BASE_URL;
 
       const orderRes = await fetch(`${backendBaseUrl}/api/payments/order`, {
         method: 'POST',

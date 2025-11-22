@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Package, Save, X, Upload, Trash2, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../../config';
 
 export default function AddProductForm() {
 
    const navigate = useNavigate();
-  const API_URL = 'http://localhost:5000/api';
   const [formData, setFormData] = useState({
     title: '',
     price: '',

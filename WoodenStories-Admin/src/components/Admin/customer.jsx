@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Search, Download, Eye, MoreVertical, XCircle } from 'lucide-react';
+import { API_URL } from '../../config';
 
 export default function Customer() {
   const [customers, setCustomers] = useState([]);
@@ -8,7 +9,7 @@ export default function Customer() {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/customers")
+    fetch(`${API_URL}/customers`)
       .then(res => res.json())
       .then(data => {
         setCustomers(data);

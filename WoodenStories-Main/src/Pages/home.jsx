@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, ChevronRight, Star, Shield, Truck, Heart } from 'lucide-react';
 import { Link } from 'react-router';
+import { BACKEND_BASE_URL, API_URL } from '../config';
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -52,7 +53,7 @@ export default function Home() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/products");
+      const res = await fetch(`${API_URL}/products`);
       const data = await res.json();
 
       const transformed = data.map(product => {
@@ -67,7 +68,7 @@ export default function Home() {
               imageUrl = first.startsWith("http")
                 ? first
                 : first.startsWith("/")
-                ? `http://localhost:5000${first}`
+                ? `${BACKEND_BASE_URL}${first}`
                 : first;
             }
           } else if (typeof imgs === "string") {
@@ -80,13 +81,13 @@ export default function Home() {
                 imageUrl = first.startsWith("http")
                   ? first
                   : first.startsWith("/")
-                  ? `http://localhost:5000${first}`
+                  ? `${BACKEND_BASE_URL}${first}`
                   : first;
               }
             } else if (trimmed.startsWith("http")) {
               imageUrl = trimmed;
             } else if (trimmed.startsWith("/")) {
-              imageUrl = `http://localhost:5000${trimmed}`;
+              imageUrl = `${BACKEND_BASE_URL}${trimmed}`;
             } else {
               imageUrl = fixCloudinaryUrl(trimmed) || imageUrl;
             }

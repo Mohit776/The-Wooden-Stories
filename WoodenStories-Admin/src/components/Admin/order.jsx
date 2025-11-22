@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Package, Search, Filter, Download, Eye, Edit2, Check, XCircle, Clock
 } from 'lucide-react';
+import { API_URL } from '../../config';
 
 export default function Order() {
 
@@ -13,7 +14,7 @@ export default function Order() {
   // ✅ Fetch orders from backend
 const fetchOrders = async () => {
   try {
-    const res = await fetch("http://localhost:5000/api/orders");
+    const res = await fetch(`${API_URL}/orders`);
     const data = await res.json();
 
     // handle multiple possible response formats safely
@@ -58,7 +59,7 @@ const fetchOrders = async () => {
   // ✅ Update status of a specific order
   const updateStatus = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
+      const res = await fetch(`${API_URL}/orders/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

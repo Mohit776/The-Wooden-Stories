@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Heart, Star, Filter, Grid, List, Search, X, ChevronLeft, ChevronRight, Loader } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
+import { BACKEND_BASE_URL, API_URL } from '../config';
 
 const Products = () => {
     const [viewMode, setViewMode] = useState('list');
@@ -47,7 +48,7 @@ const Products = () => {
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/products');
+            const response = await fetch(`${API_URL}/products`);
 
             if (!response.ok) throw new Error('Failed to fetch products');
             const data = await response.json();
@@ -64,7 +65,7 @@ const Products = () => {
                 imageUrl = first.startsWith('http')
                     ? first
                     : first.startsWith('/')
-                        ? `http://localhost:5000${first}`
+                        ? `${BACKEND_BASE_URL}${first}`
                         : first;
             }
         } else if (typeof imgs === 'string') {
@@ -76,13 +77,13 @@ const Products = () => {
                     imageUrl = first.startsWith('http')
                         ? first
                         : first.startsWith('/')
-                            ? `http://localhost:5000${first}`
+                            ? `${BACKEND_BASE_URL}${first}`
                             : first;
                 }
             } else if (trimmed.startsWith('http')) {
                 imageUrl = trimmed;
             } else if (trimmed.startsWith('/')) {
-                imageUrl = `http://localhost:5000${trimmed}`;
+                imageUrl = `${BACKEND_BASE_URL}${trimmed}`;
             }
         }
     } catch {
@@ -98,7 +99,7 @@ const Products = () => {
             const trimmed = val.trim();
             if (!trimmed) return null;
             if (trimmed.startsWith('http')) return trimmed;
-            if (trimmed.startsWith('/')) return `http://localhost:5000${trimmed}`;
+            if (trimmed.startsWith('/')) return `${BACKEND_BASE_URL}${trimmed}`;
             return trimmed;
         };
 

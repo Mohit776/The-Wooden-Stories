@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Package, MapPin, Calendar, ChevronDown, ChevronUp, Loader, AlertCircle, ShoppingBag } from 'lucide-react';
+import { BACKEND_BASE_URL } from '../config';
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -7,7 +8,7 @@ export default function MyOrders() {
   const [error, setError] = useState('');
   const [expandedId, setExpandedId] = useState(null);
 
-  const backendBaseUrl = 'http://localhost:5000';
+  const backendBaseUrl = BACKEND_BASE_URL;
 
   const getUserPhone = () => {
     return (

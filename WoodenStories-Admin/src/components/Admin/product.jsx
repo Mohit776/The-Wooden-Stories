@@ -3,6 +3,7 @@ import {
   Edit2, Trash2, Plus, Search, Filter, AlertCircle, Loader
 } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
+import { BACKEND_BASE_URL, API_URL } from '../../config';
 
 export default function Product() {
   const navigate = useNavigate();
@@ -15,8 +16,6 @@ export default function Product() {
   const [filterStatus, setFilterStatus] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState(null);
-
-  const API_URL = 'http://localhost:5000/api';
 
   // Fetch all products
   const fetchProducts = async () => {
@@ -173,7 +172,7 @@ export default function Product() {
                 } else if (s.startsWith('http')) {
                   images = [s];
                 } else if (s.startsWith('/')) {
-                  images = [`http://localhost:5000${s}`];
+                  images = [`${BACKEND_BASE_URL}${s}`];
                 }
               }
             } catch (_) {
@@ -181,7 +180,7 @@ export default function Product() {
             }
 
             const firstImage = images.length > 0
-              ? (typeof images[0] === 'string' && (images[0].startsWith('http') ? images[0] : `http://localhost:5000${images[0]}`))
+              ? (typeof images[0] === 'string' && (images[0].startsWith('http') ? images[0] : `${BACKEND_BASE_URL}${images[0]}`))
               : null;
 
             return (

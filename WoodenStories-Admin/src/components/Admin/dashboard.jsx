@@ -4,6 +4,7 @@ import {
   TrendingUp, TrendingDown, DollarSign, Eye, Download,
   Check, XCircle, Clock
 } from 'lucide-react';
+import { API_URL } from '../../config';
 
 export default function Dashboard() {
   const [orders, setOrders] = useState([])
@@ -15,9 +16,9 @@ export default function Dashboard() {
     const fetchAll = async () => {
       try {
         const [oRes, pRes, cRes] = await Promise.all([
-          fetch('http://localhost:5000/api/orders'),
-          fetch('http://localhost:5000/api/products'),
-          fetch('http://localhost:5000/api/customers'),
+          fetch(`${API_URL}/orders`),
+          fetch(`${API_URL}/products`),
+          fetch(`${API_URL}/customers`),
         ])
         const [o, p, c] = await Promise.all([oRes.json(), pRes.json(), cRes.json()])
 
