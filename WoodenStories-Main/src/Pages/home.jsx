@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, ChevronRight, Star, Shield, Truck, Heart } from 'lucide-react';
+import { ShoppingBag, ChevronRight, Star, Shield, Truck, Heart,Loader } from 'lucide-react';
 import { Link } from 'react-router';
 import { BACKEND_BASE_URL, API_URL } from '../config';
 
@@ -172,7 +172,17 @@ export default function Home() {
     { icon: Star, title: "Handcrafted", description: "Each piece uniquely crafted by artisans" },
   ];
 
-  if (loading) return <div className="text-center py-20 text-xl text-[#2c1910]">Loading products...</div>;
+ // if (loading) return <div className="text-center py-20 text-xl text-[#2c1910]">Loading products...</div>;
+   if (loading) {
+        return (
+            <div className="bg-linear-to-br from-[#f3e9c6] via-[#f5ecd0] to-[#f3e9c6] min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <Loader className="w-16 h-16 text-[#d6c088] animate-spin mx-auto mb-4" />
+                    <p className="text-[#2c1910] text-xl font-serif">Loading Home...</p>
+                </div>
+            </div>
+        );
+    }
   if (error) return <div className="text-center py-20 text-xl text-red-600">{error}</div>;
 
   return (

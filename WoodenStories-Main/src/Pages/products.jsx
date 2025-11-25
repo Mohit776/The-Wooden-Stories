@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { BACKEND_BASE_URL, API_URL } from '../config';
 
 const Products = () => {
-    const [viewMode, setViewMode] = useState('list');
+    const [viewMode, setViewMode] = useState('grid');
     const [sortBy, setSortBy] = useState('featured');
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 50000]);
